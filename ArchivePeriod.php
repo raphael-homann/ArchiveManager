@@ -144,6 +144,9 @@ class ArchivePeriod
                         $first_item = $item;
                     }
                 }
+                if(!is_null($first_item)) {
+                    echo "<br>(keep first) " . $first_item->getDate()->format('"d/m/Y') . "?";
+                }
             } elseif($this->mode == self::MODE_KEEP_ALL) {
                 foreach($this->items as $item) {
                     echo "<br>(keep all) " . $item->getDate()->format('"d/m/Y') . "?";
