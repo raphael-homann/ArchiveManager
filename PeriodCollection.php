@@ -45,4 +45,11 @@ class PeriodCollection
             }
         }
     }
+
+    public function cleanArchives()
+    {
+        foreach($this->periods as $period) {
+            $period -> cleanArchives();
+        }
+    }
 }

@@ -21,7 +21,7 @@ class ArchivePeriod
     protected $mode;
 
     /** @var  ArchiveItem[] */
-    protected $items;
+    protected $items = array();
 
     /** @var  DateTime */
     protected $end_date;
@@ -45,7 +45,7 @@ class ArchivePeriod
         echo "<br>period : du ".$this->start_date->format('d/m/Y');
 
         if(!is_null($end_date)) {
-            $this -> setEnddate($end_date);
+            $this -> setEndDate($end_date);
         }
     }
 
@@ -78,11 +78,11 @@ class ArchivePeriod
         $this->end_timestamp = $end_timestamp;
         return $this;
     }
-    private function setEnddate(DateTime $end_date)
+    private function setEndDate(DateTime $end_date)
     {
         $this->end_date = $end_date;
         $this->setEndTimestamp($end_date->getTimestamp());
-        echo "<br>period : du ".$this->start_date->format('d/m/Y')." au ".$this->end_date->format("d/m/Y");
+//        echo "<br>period : du ".$this->start_date->format('d/m/Y')." au ".$this->end_date->format("d/m/Y");
 
     }
 
@@ -126,6 +126,30 @@ class ArchivePeriod
     {
         if(is_null($this->end_timestamp)) return time();
         return $this->end_timestamp;
+    }
+
+    public function cleanArchives()
+    {
+        if(!is_null($this->period_collection)) {
+            $this->period_collection->cleanArchives();
+        } else {
+            if($this->mode == self::MODE_KEEP_FIRST) {
+                /** @var ArchiveItem $first_item */
+                $first_item = null;
+                foreach($this->items as $item) {
+                    if(is_null($first_item)) {
+                        $first_item = $item;
+                    } elseif($item->getTimestamp()<$first_item->getTimestamp()) {
+                        $first_item -> delete();
+                        $first_item = $item;
+                    }
+                }
+            } elseif($this->mode == self::MODE_KEEP_ALL) {
+                foreach($this->items as $item) {
+                    echo "<br>(keep all) " . $item->getDate()->format('"d/m/Y') . "?";
+                }
+            }
+        }
     }
 
 

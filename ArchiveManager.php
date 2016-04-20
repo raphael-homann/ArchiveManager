@@ -56,6 +56,7 @@ class ArchiveManager {
         foreach($this -> iterator -> getArchiveItems() as $item) {
             $this -> addItem($item);
         }
+        $this->periods -> cleanArchives();
         echo "run";
     }
 

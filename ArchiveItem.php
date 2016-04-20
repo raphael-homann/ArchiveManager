@@ -27,4 +27,17 @@ class ArchiveItem
     {
         return $this->date -> getTimestamp();
     }
+
+    /**
+     * @return DateTime
+     */
+    public function getDate()
+    {
+        return $this->date;
+    }
+
+    public function delete()
+    {
+        echo "<br>DELETE ".$this->date->format('Y-m-d');
+    }
 }
