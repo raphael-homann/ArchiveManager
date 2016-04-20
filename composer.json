@@ -1,0 +1,23 @@
+{
+  "name": "efrogg/archivemanager",
+  "type": "library",
+  "description": "Archive Manager",
+  "keywords": ["backup"],
+  "homepage": "https://github.com/raphael-homann/ArchiveManager",
+  "license": "LGPL",
+  "authors": [
+    {
+      "name": "raphael homann",
+      "email": "raph@e-frogg.com",
+      "homepage": "https://github.com/raphael-homann"
+    }
+  ],
+  "require": {
+    "php": ">=5.4.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "eFrogg\\ArchiveManager\\": "src/eFrogg/ArchiveManager/"
+    }
+  }
+}
