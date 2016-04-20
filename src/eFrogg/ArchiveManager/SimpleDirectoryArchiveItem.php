@@ -24,7 +24,7 @@ class SimpleDirectoryArchiveItem extends ArchiveItem
 
     public function delete()
     {
-        if(!ArchiveManager::$realMode) {
+        if($this->simulate) {
             echo "<br>[simulation] Suppression fichier ".$this->real_path;
         } else {
             unlink($this->real_path);

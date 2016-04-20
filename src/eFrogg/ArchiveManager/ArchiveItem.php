@@ -8,6 +8,7 @@ namespace eFrogg\ArchiveManager;
  */
 abstract class ArchiveItem
 {
+    protected $simulate = false;
     /**
      * @var \DateTime
      */
@@ -42,4 +43,14 @@ abstract class ArchiveItem
     }
 
     abstract public function delete();
+
+    /**
+     * @param boolean $simulate
+     * @return ArchiveItem
+     */
+    public function setSimulate($simulate)
+    {
+        $this->simulate = $simulate;
+        return $this;
+    }
 }

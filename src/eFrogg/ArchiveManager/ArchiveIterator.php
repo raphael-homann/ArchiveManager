@@ -8,9 +8,20 @@
 namespace eFrogg\ArchiveManager;
 abstract class ArchiveIterator {
 
+    protected $simulate = false;
     /**
      * @return ArchiveItem[]
      */
     abstract public function getArchiveItems();
+
+    /**
+     * @param boolean $simulate
+     * @return ArchiveIterator
+     */
+    public function setSimulate($simulate)
+    {
+        $this->simulate = $simulate;
+        return $this;
+    }
 
 }

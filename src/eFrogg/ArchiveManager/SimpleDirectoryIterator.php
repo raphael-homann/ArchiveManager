@@ -39,6 +39,9 @@ class SimpleDirectoryIterator extends ArchiveIterator {
                 }
             }
         }
+        array_walk($items,function(ArchiveItem $item){
+            $item -> setSimulate($this -> simulate);
+        });
         return $items;
     }
 

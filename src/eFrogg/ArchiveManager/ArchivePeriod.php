@@ -145,7 +145,7 @@ class ArchivePeriod
 
     public function cleanArchives()
     {
-        echo "<br><br>clean : ".$this;
+//        echo "<br><br>clean : ".$this;
         if(!is_null($this->period_collection)) {
             $this->period_collection->cleanArchives();
         } else {
@@ -158,26 +158,26 @@ class ArchivePeriod
                         $first_item = $item;
                     } elseif($item->getTimestamp()<$first_item->getTimestamp()) {
                         // on ajoute un item plus vieux
-                        // on supprime le plus récent
-                        echo "<br>(delete) ".$first_item;
+                        // on supprime le plus rï¿½cent
+//                        echo "<br>(delete) ".$first_item;
                         $first_item -> delete();
                         // et on stocke le nouveau plus vieux
                         $first_item = $item;
                     } else {
-                        // on trouve un item plus récent
+                        // on trouve un item plus rï¿½cent
                         // on le supprime
-                        echo "<br>(delete) ".$item;
+//                        echo "<br>(delete) ".$item;
                         $item->delete();
                     }
                 }
                 if(!is_null($first_item)) {
-                    echo "<br>(keep first) " . $first_item;
+//                    echo "<br>(keep first) " . $first_item;
                 } else {
 //                    echo "no item to clean (".count($this->items).")";
                 }
             } elseif($this->mode == self::MODE_KEEP_ALL) {
                 foreach($this->items as $item) {
-                    echo "<br>(keep all) " . $item;
+//                    echo "<br>(keep all) " . $item;
                 }
             } else {
 //                echo "no mode !";
@@ -185,7 +185,14 @@ class ArchivePeriod
         }
     }
 
-
+    public function reset()
+    {
+        if(!is_null($this->period_collection)) {
+            $this->period_collection->reset();
+        } else {
+            $this->items = [];
+        }
+    }
 
 
 }

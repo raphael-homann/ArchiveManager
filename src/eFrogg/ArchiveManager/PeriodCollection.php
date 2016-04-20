@@ -48,4 +48,11 @@ class PeriodCollection
             $period -> cleanArchives();
         }
     }
+
+    public function reset()
+    {
+        foreach($this->periods as $period) {
+            $period -> reset();
+        }
+    }
 }

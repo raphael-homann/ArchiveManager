@@ -2,8 +2,6 @@
 namespace eFrogg\ArchiveManager;
 class ArchiveManager {
 
-    public $realMode = false;
-
     /** @var  PeriodCollection */
     public $periods;
 
@@ -69,6 +67,12 @@ class ArchiveManager {
     private function addItem(ArchiveItem $item)
     {
         $this->periods -> addItem($item);
+    }
+
+    public function reset()
+    {
+        $this->periods -> reset();
+        return $this;
     }
 
 }
