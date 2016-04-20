@@ -2,10 +2,13 @@
 
 class ArchiveManager {
 
+    public static $realMode = false;
+
     /** @var  PeriodCollection */
     public $periods;
 
-    public $min_timestamp = null;
+    /** @var DateTime */
+    public $min_date = null;
 
     /** @var  ArchiveIterator */
     protected $iterator;
@@ -26,8 +29,8 @@ class ArchiveManager {
         if($autoEnd) {
             $period->setEndTimestamp($this->getMinTimestamp());
         }
-        if(is_null($this->min_timestamp) || $period -> getStartTimestamp()<$this->min_timestamp) {
-            $this->min_timestamp = $period -> getStartTimestamp();
+        if(is_null($this->min_date) || $period -> getStartTimestamp()<$this->min_date->getTimestamp()) {
+            $this->min_date = $period -> getStartDate();
         }
         return $period;
     }
@@ -37,27 +40,29 @@ class ArchiveManager {
      */
     public function getMinTimestamp()
     {
-        if(is_null($this->min_timestamp)) {
-            $now = new DateTime();
-            return $now->getTimestamp();
+        if(is_null($this->min_date)) {
+            $this->min_date = new DateTime();
         }
-        return $this->min_timestamp;
+        return $this->min_date -> getTimestamp();
     }
 
 
-
+    /**
+     * @param ArchiveIterator $iterator
+     * @return $this
+     */
     public function setIterator(ArchiveIterator $iterator)
     {
         $this -> iterator = $iterator;
+        return $this;
     }
 
-    public function run()
+    public function cleanArchives()
     {
-        foreach($this -> iterator -> getArchiveItems() as $item) {
+        foreach($this -> iterator -> getArchiveItems() as $k => $item) {
             $this -> addItem($item);
         }
         $this->periods -> cleanArchives();
-        echo "run";
     }
 
 

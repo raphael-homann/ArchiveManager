@@ -6,7 +6,7 @@
  * Date: 20/04/16
  * Time: 05:06
  */
-class ArchiveItem
+abstract class ArchiveItem
 {
     /**
      * @var DateTime
@@ -23,6 +23,11 @@ class ArchiveItem
         $this->date = $date;
     }
 
+    public function __toString()
+    {
+        return "[item : ".$this->date->format('d/m/Y')."]";
+    }
+
     public function getTimestamp()
     {
         return $this->date -> getTimestamp();
@@ -36,8 +41,5 @@ class ArchiveItem
         return $this->date;
     }
 
-    public function delete()
-    {
-        echo "<br>DELETE ".$this->date->format('Y-m-d');
-    }
+    abstract public function delete();
 }

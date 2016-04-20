@@ -30,9 +30,10 @@ class SimpleDirectoryIterator extends ArchiveIterator {
         if($dir = opendir($this->path)) {
             while($file_name = readdir($dir)) {
                 if(preg_match($this->regex,$file_name,$match)) {
-    //                var_dump($file_name);
                     $date = new DateTime($match[1]);
-                    $items[] = new ArchiveItem($date);
+                    $item = new SimpleDirectoryArchiveItem($date);
+                    $item -> setRealPath($this->path."/".$file_name);
+                    $items[] = $item;
                 }
             }
         }

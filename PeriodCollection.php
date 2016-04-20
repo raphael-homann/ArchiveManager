@@ -15,15 +15,6 @@ class PeriodCollection
     protected $periods;
 
 
-    /**
-     * PeriodCollection constructor.
-     * @param int $start_timestamp
-     * @param $segments
-     */
-    public function __construct()
-    {
-    }
-
     public function addPeriod(ArchivePeriod $period) {
         $this -> periods[]=$period;
     }
@@ -37,12 +28,17 @@ class PeriodCollection
 
     public function addItem(ArchiveItem $item)
     {
-        echo "<br>additem ".$item -> getTimestamp();
+//        echo "<br>additem ".$item;
         $item_time = $item -> getTimestamp();
+        $added = false;
         foreach($this->periods as $period) {
             if($period -> hasDate($item_time)) {
                 $period->addItem($item);
+                $added = true;
             }
+        }
+        if(!$added ) {
+//            echo "not added" ;
         }
     }
 

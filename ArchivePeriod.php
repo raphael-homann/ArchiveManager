@@ -42,7 +42,7 @@ class ArchivePeriod
 
         $this -> start_timestamp = $this->start_date -> getTimestamp();
 
-        echo "<br>period : du ".$this->start_date->format('d/m/Y');
+//        echo "<br>period : du ".$this->start_date->format('d/m/Y');
 
         if(!is_null($end_date)) {
             $this -> setEndDate($end_date);
@@ -76,6 +76,9 @@ class ArchivePeriod
     public function setEndTimestamp($end_timestamp)
     {
         $this->end_timestamp = $end_timestamp;
+        if(is_null($this->end_date) || $this->end_date->getTimestamp() != $end_timestamp) {
+            $this->end_date = new DateTime("@".$end_timestamp);
+        }
         return $this;
     }
     private function setEndDate(DateTime $end_date)
@@ -83,7 +86,20 @@ class ArchivePeriod
         $this->end_date = $end_date;
         $this->setEndTimestamp($end_date->getTimestamp());
 //        echo "<br>period : du ".$this->start_date->format('d/m/Y')." au ".$this->end_date->format("d/m/Y");
+    }
 
+    /**
+     * @return mixed
+     */
+    public function getEndTimestamp()
+    {
+        if(is_null($this->end_timestamp)) return time();
+        return $this->end_timestamp;
+    }
+
+    public function getStartDate()
+    {
+        return $this -> start_date;
     }
 
     /**
@@ -114,22 +130,22 @@ class ArchivePeriod
             $this->period_collection->addItem($item);
         } else {
             $this ->items[]=$item;
-            echo "<br> add ".$item->getTimestamp()." dans ";
+//            echo "<br> add ".$item." dans ".$this;
         }
 
     }
 
-    /**
-     * @return mixed
-     */
-    public function getEndTimestamp()
+    public function __toString()
     {
-        if(is_null($this->end_timestamp)) return time();
-        return $this->end_timestamp;
+        return "[period ". $this->start_date->format("d/m/Y")." -> ".
+        (is_null($this->end_date)?"":$this->end_date->format("d/m/Y"))
+        ."]";
     }
+
 
     public function cleanArchives()
     {
+        echo "<br><br>clean : ".$this;
         if(!is_null($this->period_collection)) {
             $this->period_collection->cleanArchives();
         } else {
@@ -138,22 +154,38 @@ class ArchivePeriod
                 $first_item = null;
                 foreach($this->items as $item) {
                     if(is_null($first_item)) {
+                        // on conserve le permier, sans le supprimer
                         $first_item = $item;
                     } elseif($item->getTimestamp()<$first_item->getTimestamp()) {
+                        // on ajoute un item plus vieux
+                        // on supprime le plus récent
+                        echo "<br>(delete) ".$first_item;
                         $first_item -> delete();
+                        // et on stocke le nouveau plus vieux
                         $first_item = $item;
+                    } else {
+                        // on trouve un item plus récent
+                        // on le supprime
+                        echo "<br>(delete) ".$item;
+                        $item->delete();
                     }
                 }
                 if(!is_null($first_item)) {
-                    echo "<br>(keep first) " . $first_item->getDate()->format('"d/m/Y') . "?";
+                    echo "<br>(keep first) " . $first_item;
+                } else {
+//                    echo "no item to clean (".count($this->items).")";
                 }
             } elseif($this->mode == self::MODE_KEEP_ALL) {
                 foreach($this->items as $item) {
-                    echo "<br>(keep all) " . $item->getDate()->format('"d/m/Y') . "?";
+                    echo "<br>(keep all) " . $item;
                 }
+            } else {
+//                echo "no mode !";
             }
         }
     }
+
+
 
 
 }
