@@ -2,13 +2,15 @@
 
 namespace eFrogg\ArchiveManager;
 
+use eFrogg\ArchiveManager\FilenameExtractor\DateFilenameExtractor;
+
 class SimpleDirectoryIterator extends ArchiveIterator {
     protected $path=null;
-    protected $regex;
+    protected $filename_date_extractor;
 
-    public function __construct()
+    public function __construct(DateFilenameExtractor $filename_date_extractor)
     {
-
+        $this->filename_date_extractor = $filename_date_extractor;
     }
 
     /**
@@ -16,10 +18,9 @@ class SimpleDirectoryIterator extends ArchiveIterator {
      * @param $regex
      * @return SimpleDirectoryIterator
      */
-    public function setPath($path,$regex)
+    public function setPath($path)
     {
         $this->path = $path;
-        $this -> regex = $regex;
         return $this;
     }
 
@@ -31,11 +32,13 @@ class SimpleDirectoryIterator extends ArchiveIterator {
         //TODO : directoryIterator
         if($dir = opendir($this->path)) {
             while($file_name = readdir($dir)) {
-                if(preg_match($this->regex,$file_name,$match)) {
-                    $date = new \DateTime($match[1]);
-                    $item = new SimpleDirectoryArchiveItem($date);
-                    $item -> setRealPath($this->path."/".$file_name);
-                    $items[] = $item;
+                if($file_name != "." && $file_name != "..") {
+                    $date = $this->filename_date_extractor->extractDateFromFilename($file_name);
+                    if(!empty($date)) {
+                        $item = new SimpleDirectoryArchiveItem($date);
+                        $item -> setRealPath($this->path."/".$file_name);
+                        $items[] = $item;
+                    }
                 }
             }
         }
